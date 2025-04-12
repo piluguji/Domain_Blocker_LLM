@@ -1,0 +1,62 @@
+Website URL: https://www.khanacademy.org
+Classification: Educational, The Khan Academy website primarily offers academic and instructional content, including video lectures, practice exercises, and learning resources, making it suitable for educational use.
+--------------------------------------------------
+Website URL: https://ocw.mit.edu
+Classification: Educational.
+
+This website primarily offers academic and instructional content from MIT, including free online course materials, lecture notes, exams, videos, and interactive resources, making it suitable for educational purposes. There is no indication of non-educational content such as gaming or pornography on the website.
+--------------------------------------------------
+Website URL: https://www.edx.org
+Classification: Educational.
+
+This website is primarily an educational platform offering academic and instructional content, including free courses, full degrees, and learning resources from world-class institutions like Harvard, Google, Amazon, and more, making it suitable for educational use.
+--------------------------------------------------
+Website URL: https://www.coursera.org
+Classification: Educational.
+
+This website primarily offers academic and instructional content, including online courses from top universities and companies, as well as degree programs and career advancement resources, making it suitable for educational purposes.
+--------------------------------------------------
+Website URL: https://www.wikipedia.org
+Classification: Educational
+
+This website can be used for educational purposes as it primarily offers academic and instructional content, including a vast collection of articles on various subjects, making it an invaluable resource for learning and research.
+--------------------------------------------------
+Website URL: https://www.ign.com
+Classification: I classify this website as "Not Educational", because despite offering some academic and research-based content such as game reviews and analysis, the majority of its content revolves around gaming news, reviews, and walkthroughs, making it primarily an entertainment website rather than an educational resource.
+--------------------------------------------------
+Website URL: https://www.reddit.com/r/gaming
+Classification: Not Educational.
+
+This website is primarily focused on discussions and sharing of personal experiences related to video games, with user-generated content such as comments and posts about various games, but it lacks academic rigor, critical analysis, and educational resources, instead featuring a community-driven forum for gamers to share their opinions and engage in social interactions.
+--------------------------------------------------
+Website URL: https://www.espn.com
+Classification: Educational.
+
+Although ESPN primarily provides sports news and information, which may not seem directly educational at first glance, it does offer some instructional content related to sports analysis, statistics, and history, making it suitable for educational purposes, such as research or academic projects on sports topics.
+--------------------------------------------------
+Website URL: https://www.pornhub.com
+Classification: I would classify this website as "Not Educational" because it primarily contains explicit and adult content, including pornographic material, which is not suitable for educational use.
+--------------------------------------------------
+Website URL: https://www.xvideos.com
+Classification: I would classify this website as "Not Educational".
+
+This website is primarily focused on providing pornographic material, which is not suitable for educational purposes and can be considered explicit and mature content. The presence of tags such as "Porn", "Gay Porn", " Shemale Porn", and explicit video titles further reinforce the non-educational nature of the content.
+--------------------------------------------------
+Website URL: https://www.tmz.com
+Classification: Not Educational. This website primarily focuses on celebrity news and entertainment gossip, which is not academic or instructional in nature, and does not provide learning resources or educational content.
+--------------------------------------------------
+Website URL: https://www.nytimes.com
+Classification: Educational.
+
+The New York Times website primarily offers academic and instructional content, including news, investigations, analysis, and research on various subjects such as politics, business, technology, science, health, arts, sports, and more, which can be used for educational purposes by students, researchers, and the general public.
+--------------------------------------------------
+Website URL: https://www.hulu.com
+Classification: Classification: Not Educational
+
+The website primarily offers entertainment content such as TV shows, movies, and live sports, which do not align with academic or instructional content, making it unsuitable for educational purposes.
+--------------------------------------------------
+Website URL: https://www.netflix.com
+Classification: **Not Educational**
+
+This website is primarily focused on entertainment and streaming services, with no academic or instructional content, making it unsuitable for educational use, as it contains features like trending shows and movies, gaming-related content (e.g., "Despicable Me"), and no educational resources or learning materials.
+--------------------------------------------------

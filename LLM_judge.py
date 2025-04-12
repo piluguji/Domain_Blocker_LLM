@@ -49,10 +49,3 @@ def classify_website_content(info):
         clean_response = clean_response[len("Response:"):].strip()
     
     return clean_response
-
-if __name__ == "__main__":
-    info = get_website_info("tmz.com")
-    
-    # Get the classification result from the LLM.
-    classification = classify_website_content(info)
-    print("Website Classification:", classification)

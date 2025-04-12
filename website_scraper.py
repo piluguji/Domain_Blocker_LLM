@@ -16,8 +16,7 @@ def _fetch_page(url: str) -> str:
         response.raise_for_status()  # Raise an exception for HTTP errors
         return response.text
     except requests.RequestException as e:
-        print(f"Error fetching {url}: {e}")
-        sys.exit(1)
+        return Exception(f"Error fetching the page: {e}")
 
 def _extract_info(html: str, url: str) -> dict:
     """Extract title, meta description, and main text content from the webpage."""
@@ -51,10 +50,14 @@ def get_website_info(url):
     input_url = _normalize_url(url)
     
     # Fetch webpage data
-    html = _fetch_page(input_url)
+    try: 
+        html = _fetch_page(input_url)
     
-    # Extract information from the HTML
-    info = _extract_info(html, input_url)
-
+        # Extract information from the HTML
+        info = _extract_info(html, input_url)
+    except Exception as e:
+        print(f"Error with {url}")
+        info = {"url": input_url,
+                "domain": urlparse(input_url).netloc}
     return info 
 
