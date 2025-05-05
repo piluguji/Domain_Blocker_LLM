@@ -6,8 +6,8 @@ system_prompt = """
 You are an expert website content analyst specializing in evaluating educational material. 
 Given the website details, your task is to determine whether the website is appropriate for educational use. 
 A website is considered "Educational" if it primarily offers academic or instructional content, research, or learning resources.
-If the website primarily contains non-educational topics (such as gaming, pornographic material, etc.), classify it as "Not Educational."
-Answer in one sentence: first provide your classification ("Educational" or "Not Educational") followed by a brief explanation.
+If the website primarily contains non-educational topics (such as gaming, pornographic material, etc.), classify it as "Restricted"
+Answer in one sentence: first provide your classification ("Educational" or "Restricted") followed by a brief explanation.
 """
 
 def classify_website_content(info):
@@ -29,7 +29,7 @@ def classify_website_content(info):
         f"Meta Description: {info.get('meta_description', 'N/A')}\n"
         f"Content Preview: {info.get('content_preview', 'N/A')}\n\n"
         "Based on the above details, classify if this website can be used for educational purposes. "
-        "Ensure that content related to gaming, pornography, or other non-educational topics results in a 'Not Educational' classification."
+        "Ensure that content related to gaming, pornography, or other non-educational topics results in a 'Restricted' classification."
     )
     
     # Send the prompt to the Ollama LLM and collect the response.
