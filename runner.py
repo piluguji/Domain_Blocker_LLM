@@ -1,41 +1,96 @@
 from LLM_judge import classify_website_content
 from website_scraper import get_website_info
-import time 
+import time
+import pandas as pd
 
-if __name__ == "__main__":
-    
-    urls = [
-        ("https://www.khanacademy.org", True),
-        ("https://ocw.mit.edu", True),
-        ("https://www.edx.org", True),
-        ("https://www.coursera.org", True),
-        ("https://www.wikipedia.org", True),
-        ("https://www.ign.com", False),
-        ("https://www.reddit.com/r/gaming", False),
-        ("https://www.espn.com", False),
-        ("https://www.pornhub.com", False),
-        ("https://www.xvideos.com", False),
-        ("https://www.tmz.com", False),
-        ("https://www.nytimes.com", True),
-        ("https://www.hulu.com", False),
-        ("https://www.netflix.com", False)
-    ]
+# --- Keyword Lists ---
+EDUCATIONAL_KEYWORDS = {
+    "university", "college", "school", "curriculum", "syllabus", "degree", "graduate", "undergraduate",
+    "lectures", "learning", "education", "academic", "research", "textbook", "tutorial", "study", "students",
+    "professor", "instructor",
+    "science", "math", "engineering", "humanities", "class", "seminar", "lesson",
+    "scholarly", "study guide", "STEM",
+}
 
-    incorrect = 0 
-    start = time.time()
-    for url, is_educational in urls:
-    
-        # Retrieve website information.
+RESTRICTED_KEYWORDS = {
+    "porn", "xxx", "nsfw", "sex", "nude", "camgirl", "adult", "escort", "strip", "fetish",
+    "casino", "betting", "poker", "lottery", "jackpot", "slots", "roulette", "gamble", "wager", "odds",
+    "netflix", "hulu", "disney+", "prime video", "streaming", "movies online", "free movies", "watch tv", "live sports", "crunchyroll", "twitch", "anime streaming",
+    "gaming", "video game", "ps5", "xbox", "nintendo", "minecraft", "fortnite", "roblox", "steam", "epic games",
+    "torrent", "pirate", "crack", "keygen", "warez", "cheat", "hack tool", "dark web",
+    "buy weed", "buy cocaine", "buy lsd", "marijuana", "drugstore without prescription", "legal high",
+    "celebrity gossip", "fashion blog", "shopping deals", "luxury brands", "astrology", "dating site", "chatroom", "meme site", "influencer", "reality tv"
+}
+
+
+# --- Classification Functions ---
+def rules_based_classification(text):
+    if not text or not isinstance(text, str):
+        return False  # Block if no info available
+
+    text_lower = text.lower()
+
+    if any(keyword in text_lower for keyword in RESTRICTED_KEYWORDS):
+        return False
+
+    if any(keyword in text_lower for keyword in EDUCATIONAL_KEYWORDS):
+        return True
+
+    return False  # Default to non-educational
+
+
+def llm_classification(text):
+    result = classify_website_content(text)
+    return result.lower().startswith("educational")
+
+
+# --- Evaluation Function ---
+def evaluate(df):
+    incorrect_llm = 0
+    incorrect_rules = 0
+
+    # accumulators for just the classification calls
+    time_llm = 0.0
+    time_rules = 0.0
+
+    for _, row in df.iterrows():
+        url = row['website_url']
+        expected = row['is_education']
+
+        # 1) scrape once
+        t = time.time()
         info = get_website_info(url)
-        
-        # Get the classification result from the LLM.
-        llm_result = classify_website_content(info)
-        llm_is_educational = llm_result.lower().startswith("educational")
+        elapsed = (time.time() - t)
+        time_llm += elapsed
+        time_rules += elapsed
 
-        if llm_is_educational != is_educational:
-            # print(f"Mismatch for {url}: Expected {is_educational}, got {llm_is_educational}")
-            # print(llm_result)
-            incorrect += 1
+        # 2) rules-based
+        t0 = time.time()
+        pred_rules = rules_based_classification(info)
+        time_rules += (time.time() - t0)
+        if pred_rules != expected:
+            incorrect_rules += 1
 
-    print(f"Time: {time.time() - start:.2f} s")
-    print(f"Accuracy: {100*(1.0 - incorrect/len(urls)):.2f}%")
+        # 3) LLM-based
+        t1 = time.time()
+        pred_llm = llm_classification(info)
+        time_llm += (time.time() - t1)
+        if pred_llm != expected:
+            incorrect_llm += 1
+
+    n = len(df)
+    acc_rules = 100 * (1 - incorrect_rules / n)
+    acc_llm   = 100 * (1 - incorrect_llm   / n)
+
+    print(f"[RULES] Time spent classifying: {time_rules:.2f}s | Accuracy: {acc_rules:.2f}%")
+    print(f"[LLM]   Time spent classifying: {time_llm:.2f}s | Accuracy: {acc_llm:.2f}%\n")
+
+
+
+# --- Main Runner ---
+if __name__ == "__main__":
+    df = pd.read_csv('output.csv')
+    # df = df.drop(columns=['Unnamed: 0', 'cleaned_website_text', 'Category', 'url_exists'])
+
+    # Choose one or both
+    evaluate(df)

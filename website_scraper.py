@@ -56,7 +56,7 @@ def get_website_info(url):
         # Extract information from the HTML
         info = _extract_info(html, input_url)
     except Exception as e:
-        print(f"Error with {url}")
+        # print(f"Error with {url}")
         info = {"url": input_url,
                 "domain": urlparse(input_url).netloc}
     return info 
