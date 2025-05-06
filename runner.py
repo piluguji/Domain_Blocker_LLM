@@ -2,6 +2,7 @@ from LLM_judge import classify_website_content
 from website_scraper import get_website_info
 import time
 import pandas as pd
+import json
 
 # --- Keyword Lists ---
 EDUCATIONAL_KEYWORDS = {
@@ -40,8 +41,21 @@ def rules_based_classification(text):
 
 
 def llm_classification(text):
-    result = classify_website_content(text)
-    return result.lower().startswith("educational")
+    # call into your LLM wrapper
+    raw = classify_website_content(text)
+
+    # try to parse the JSON the model returns
+    try:
+        obj = json.loads(raw)
+        classification = obj.get("classification", "Restricted")
+        reason         = obj.get("reason", "")
+    except json.JSONDecodeError:
+        # fallback if the LLM strays
+        classification = "Restricted"
+        reason         = "parse error fallback"
+
+    is_blocked = not (classification == "Educational")
+    return is_blocked, reason
 
 
 # --- Evaluation Function ---
@@ -53,9 +67,11 @@ def evaluate(df):
     time_llm = 0.0
     time_rules = 0.0
 
+    llm_predictions = []
+
     for _, row in df.iterrows():
         url = row['website_url']
-        expected = row['is_education']
+        expected = row['is_blocked']
 
         # 1) scrape once
         t = time.time()
@@ -73,8 +89,9 @@ def evaluate(df):
 
         # 3) LLM-based
         t1 = time.time()
-        pred_llm = llm_classification(info)
+        pred_llm, _ = llm_classification(info)
         time_llm += (time.time() - t1)
+        llm_predictions.append((url, pred_llm, _ + "\n--------\n"))
         if pred_llm != expected:
             incorrect_llm += 1
 
@@ -85,12 +102,14 @@ def evaluate(df):
     print(f"[RULES] Time spent classifying: {time_rules:.2f}s | Accuracy: {acc_rules:.2f}%")
     print(f"[LLM]   Time spent classifying: {time_llm:.2f}s | Accuracy: {acc_llm:.2f}%\n")
 
+    with open("output.txt", "w") as f:
+        for item in llm_predictions:
+            f.write(f"{item}\n")
 
 
 # --- Main Runner ---
 if __name__ == "__main__":
-    df = pd.read_csv('output.csv')
-    # df = df.drop(columns=['Unnamed: 0', 'cleaned_website_text', 'Category', 'url_exists'])
+    df = pd.read_csv('data.csv')
 
     # Choose one or both
     evaluate(df)
