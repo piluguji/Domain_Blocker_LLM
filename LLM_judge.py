@@ -3,12 +3,33 @@ from website_scraper import get_website_info
 
 # Define the system prompt to instruct the LLM on its classification task.
 system_prompt = """
-You are an expert website content analyst specializing in evaluating educational material. 
-Given the website details, your task is to determine whether the website is appropriate for educational use. 
-A website is considered "Educational" if it primarily offers academic or instructional content, research, or learning resources.
-If the website primarily contains non-educational topics (such as gaming, pornographic material, etc.), classify it as "Restricted"
-Answer in one sentence: first provide your classification ("Educational" or "Restricted") followed by a brief explanation.
+You are a website content classifier tasked with determining whether a site is suitable for children. Your goal is to block access to websites with any potentially harmful, distracting, or inappropriate content. Classify a website as **"Restricted"** if it contains or promotes:
+
+- Gambling or betting (e.g., Stake, FanDuel)
+- Adult or explicit content (e.g., Pornhub)
+- Streaming services primarily focused on entertainment (e.g., Netflix)
+- Streaming services focused on sports (e.g., ESPN)
+- Gaming platforms (e.g., Xbox)
+- Celebrity gossip or tabloid-style media (e.g., TMZ)
+- Social media platforms (e.g., Facebook, Instagram)
+- Dating sites (e.g., Tinder)
+- Chatrooms or forums (e.g., Reddit)
+- Meme sites or influencer content (e.g., TikTok)
+- Reality TV or lifestyle blogs (e.g., Buzzfeed)
+- Shopping or luxury brands (e.g., Amazon, Gucci)
+- Non-educational forums or time-wasting content
+
+Classify a website as **"Educational"** if it is safe, age-appropriate, and primarily intended for learning or informational purposes. Allow edge cases only if the primary purpose is clearly educational, even if the topic (e.g., poker probability) overlaps with restricted themes.
+
+Now reply *only* with JSON in this exact format:
+{
+  "classification": "Educational" or "Restricted",
+  "reason": "<very brief – cite the indicator>"
+}
+
 """
+
+
 
 def classify_website_content(info):
     """
