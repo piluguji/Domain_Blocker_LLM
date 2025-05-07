@@ -84,19 +84,6 @@
       "type": "block"
     },
     "condition": {
-      "urlFilter": "https://ae.nflximg.net",
-      "resourceTypes": [
-        "main_frame"
-      ]
-    }
-  },
-  {
-    "id": 8,
-    "priority": 1,
-    "action": {
-      "type": "block"
-    },
-    "condition": {
       "urlFilter": "https://td.doubleclick.net",
       "resourceTypes": [
         "main_frame"

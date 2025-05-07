@@ -1,24 +1,24 @@
-Website URL: https://www.google.com
+Website URL: https://www.desmos.com
 Classification: Educational
-Reason: Search engine with informational features
+Reason: Free math software with learning-focused features
 --------------------------------------------------
 Website URL: https://www.netflix.com
 Classification: Restricted
-Reason: Primarily focused on entertainment
+Reason: Entertainment-focused streaming services
+--------------------------------------------------
+Website URL: https://www.google.com
+Classification: Educational
+Reason: Primary purpose is search engine and informational
 --------------------------------------------------
 Website URL: https://ae.nflximg.net
 Classification: Restricted
-Reason: Streaming service (Netflix)
+Reason: Streaming services primarily focused on entertainment
 --------------------------------------------------
 Website URL: https://www.googletagmanager.com
 Classification: Educational
-Reason: Primary purpose appears to be for Google Tag Manager service implementation and management
---------------------------------------------------
-Website URL: https://td.doubleclick.net
-Classification: Educational
-Reason: DoubleClick tracking technology
+Reason: Primary purpose appears to be instructional/technical
 --------------------------------------------------
 Website URL: https://td.doubleclick.net
 Classification: Restricted
-Reason: Targeting and tracking cookie banner from DoubleClick
+Reason: Advertising platform
 --------------------------------------------------
