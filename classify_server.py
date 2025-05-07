@@ -1,4 +1,3 @@
-
 import os
 from flask import Flask, request, jsonify
 from LLM_judge import classify_website_content
@@ -12,7 +11,6 @@ RULES_FILE = "chrome_extension/rules.json"
 app = Flask(__name__)
 CORS(app)
 
-# Read the classification file and return the classifications
 def read_classifications():
     if not os.path.exists(CLASSIFICATION_FILE):
         return {}
@@ -31,7 +29,6 @@ def read_classifications():
             current_url = None
     return classifications
 
-# Read the rules from rules.json
 def read_rules():
     if not os.path.exists(RULES_FILE):
         return []
@@ -39,12 +36,10 @@ def read_rules():
     with open(RULES_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
-# Save the updated rules back to rules.json
 def save_rules(rules):
     with open(RULES_FILE, "w", encoding="utf-8") as f:
         json.dump(rules, f, indent=2)
 
-# Function to normalize and check URL format (adds https if missing)
 def normalize_url(url):
     if not url.startswith('http://') and not url.startswith('https://'):
         return 'https://' + url
@@ -52,9 +47,12 @@ def normalize_url(url):
 
 @app.route("/get_rules")
 def get_rules():
-    with open("chrome_extension/rules.json", "r", encoding="utf-8") as f:
-        rules = json.load(f)
-    return jsonify(rules)
+    try:
+        with open(RULES_FILE, "r", encoding="utf-8") as f:
+            rules = json.load(f)
+        return jsonify(rules)
+    except Exception as e:
+        return jsonify({"error": f"Failed to read rules: {str(e)}"}), 500
 
 @app.route("/check_and_classify")
 def check_and_classify():
@@ -62,47 +60,44 @@ def check_and_classify():
     if not url:
         return jsonify({"error": "Missing URL"}), 400
 
-    # Normalize the URL to ensure it has the proper format
     url = normalize_url(url)
-
-    # Read classifications and rules
     classifications = read_classifications()
     rules = read_rules()
 
-    # If URL is already classified, return the classification
+    # Check if already classified
     if url in classifications:
-        if "not educational" in classifications[url].lower():
+        if classifications[url].lower() == "restricted":
             return jsonify({"block": True})
         else:
             return jsonify({"block": False})
 
-    # If not in classification file, classify the website
     try:
         info = get_website_info(url)
-        classification = classify_website_content(info)
+        raw_response = classify_website_content(info)
+        classification_data = json.loads(raw_response)
+
+        classification = classification_data.get("classification", "Restricted")
+        reason = classification_data.get("reason", "Unknown")
+
     except Exception as e:
         return jsonify({"error": f"Error classifying site: {str(e)}"}), 500
 
-    # Log classification to file
+    # Log result
     with open(CLASSIFICATION_FILE, "a", encoding="utf-8") as log:
         log.write(f"Website URL: {url}\n")
         log.write(f"Classification: {classification}\n")
+        log.write(f"Reason: {reason}\n")
         log.write("-" * 50 + "\n")
 
-    # If it's non-educational, add it to rules.json
-    if "not educational" in classification.lower():
-        # Check if the rule already exists
-        rule_exists = any(rule['condition']['urlFilter'] == url for rule in rules)
-        if not rule_exists:
+    if classification == "Restricted":
+        if not any(rule['condition']['urlFilter'] == url for rule in rules):
             new_rule = {
-                "id": len(rules) + 1,  # Unique ID for the rule
+                "id": len(rules) + 1,  # Must be an integer
                 "priority": 1,
                 "action": {"type": "block"},
                 "condition": {"urlFilter": url, "resourceTypes": ["main_frame"]}
             }
             rules.append(new_rule)
-
-            # Save the updated rules to rules.json
             save_rules(rules)
 
         return jsonify({"block": True})
